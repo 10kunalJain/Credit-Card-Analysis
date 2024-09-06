@@ -34,7 +34,7 @@ file_name = z.namelist()[0]
 excel_file = z.open(file_name)
 chunk_size = 1000000  # Adjust this based on your needs
 df_list = []
-for chunk in pd.read_csv(excel_file, chunksize=chunk_size):
+for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
     df_list.append(chunk)
 df_reshaped = pd.concat(df_list, ignore_index=True)
 
