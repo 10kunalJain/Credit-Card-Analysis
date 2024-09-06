@@ -32,7 +32,7 @@ response = requests.get(direct_download_link)
 z = zipfile.ZipFile(BytesIO(response.content))
 file_name = z.namelist()[0]  
 excel_file = z.open(file_name)
-chunk_size = 10000  # Adjust this based on your needs
+chunk_size = 1000000  # Adjust this based on your needs
 df_list = []
 for chunk in pd.read_csv(excel_file, chunksize=chunk_size):
     df_list.append(chunk)
