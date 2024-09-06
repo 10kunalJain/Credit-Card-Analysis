@@ -32,7 +32,7 @@ response = requests.get(direct_download_link)
 z = zipfile.ZipFile(BytesIO(response.content))
 file_name = z.namelist()[0]  
 excel_file = z.open(file_name)
-df_reshaped = pd.read_csv(excel_file)
+df_reshaped = pd.read_csv(excel_file, low_memory=False)
 
 #######################
 # Sidebar
