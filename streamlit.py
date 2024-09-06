@@ -32,7 +32,11 @@ response = requests.get(direct_download_link)
 z = zipfile.ZipFile(BytesIO(response.content))
 file_name = z.namelist()[0]  
 excel_file = z.open(file_name)
-df_reshaped = pd.read_csv(excel_file, low_memory=False)
+chunk_size = 10000  # Adjust this based on your needs
+df_list = []
+for chunk in pd.read_csv(excel_file, chunksize=chunk_size):
+    df_list.append(chunk)
+df_reshaped = pd.concat(df_list, ignore_index=True)
 
 #######################
 # Sidebar
