@@ -25,7 +25,7 @@ st.markdown(
 alt.themes.enable("dark")
 
 # Correct CSV export URL using the File ID
-direct_download_link = "https://drive.google.com/uc?export=download&id=1gw45cCIybWfVVMH3fXvPrWSXnOGC5uyR"
+direct_download_link = "https://drive.google.com/uc?export=download&id=1rn8INXFv0Kx3ZwsQHUgsPKe1vI47ik1n"
 
 # Load the data into a pandas DataFrame
 response = requests.get(direct_download_link)
