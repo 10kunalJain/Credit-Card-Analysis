@@ -3,6 +3,9 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import plotly.express as px
+import requests
+import zipfile
+from io import BytesIO
 
 #######################
 st.set_page_config(
@@ -21,14 +24,15 @@ st.markdown(
 )
 alt.themes.enable("dark")
 
-
 # Correct CSV export URL using the File ID
-csv_url = "C:/Users/HP/Downloads/loan_dataset.xls"
+direct_download_link = "https://drive.google.com/uc?export=download&id=1gw45cCIybWfVVMH3fXvPrWSXnOGC5uyR"
 
 # Load the data into a pandas DataFrame
-data = pd.read_csv(csv_url)
-df_reshaped = pd.DataFrame(data)
-
+response = requests.get(direct_download_link)
+z = zipfile.ZipFile(BytesIO(response.content))
+file_name = z.namelist()[0]  
+excel_file = z.open(file_name)
+df_reshaped = pd.read_csv(excel_file)
 
 #######################
 # Sidebar
