@@ -30,22 +30,29 @@ local_zip_file = "data.zip"
 
 # Open the ZIP file from the local path
 chunk_size = 50000  # Adjust this value based on available memory
-
-# Initialize an empty list to store chunks
-chunks = []
-
-# Open the ZIP file from the local path
 @st.cache_data
-with zipfile.ZipFile(local_zip_file, 'r') as z:
-    file_name = z.namelist()[0]  # Get the first file name in the ZIP archive
-    with z.open(file_name) as excel_file:
-        # Read the CSV file in chunks
-        for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
-            # Perform any processing on each chunk here (optional)
-            chunks.append(chunk)
+def load_large_csv_from_zip(zip_file_path, chunk_size):
+    # Initialize an empty list to store chunks
+    chunks = []
 
-# Concatenate all chunks into a single DataFrame
-df_reshaped = pd.concat(chunks, ignore_index=True)
+    # Open the ZIP file from the local path
+    with zipfile.ZipFile(zip_file_path, 'r') as z:
+        file_name = z.namelist()[0]  # Get the first file name in the ZIP archive
+        with z.open(file_name) as excel_file:
+            # Read the CSV file in chunks
+            for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
+                # Perform any processing on each chunk here (optional)
+                chunks.append(chunk)
+    
+    # Concatenate all chunks into a single DataFrame
+    df_reshaped = pd.concat(chunks, ignore_index=True)
+    return df_reshaped
+
+# Load the data
+df_reshaped = load_large_csv_from_zip(local_zip_file, chunk_size)
+
+# Now you can use df_reshaped in your Streamlit app
+# st.write(df_reshaped)
 # excel_file = z.open("data.zip")
 # chunk_size = 50  # Adjust this based on your needs
 
