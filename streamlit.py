@@ -26,14 +26,21 @@ alt.themes.enable("dark")
 
 # Correct CSV export URL using the File ID
 
-# z = zipfile.ZipFile(BytesIO(response.content))
-# file_name = z.namelist()[0]  
-excel_file = z.open("data.zip")
-chunk_size = 50  # Adjust this based on your needs
-df_list = []
-for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
-    df_list.append(chunk)
-df_reshaped = pd.concat(df_list, ignore_index=True)
+local_zip_file = "data.zip"
+
+# Open the ZIP file from the local path
+with zipfile.ZipFile(local_zip_file, 'r') as z:
+    file_name = z.namelist()[0]  # Get the first file name in the ZIP archive
+    excel_file = z.open(file_name)  # Open the file within the ZIP archive
+    chunk_size = 50
+    df_list = []
+    for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
+        df_list.append(chunk)
+    df_reshaped = pd.concat(df_list, ignore_index=True)  # Read the CSV file into a DataFrame
+# excel_file = z.open("data.zip")
+# chunk_size = 50  # Adjust this based on your needs
+
+# df_reshaped = pd.concat(df_list, ignore_index=True)
 
 #######################
 # Sidebar
