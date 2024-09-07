@@ -60,46 +60,70 @@ df_reshaped = load_large_csv_from_zip(local_zip_file, chunk_size)
 
 #######################
 # Sidebar
-with st.sidebar:
-    # Step 1: Extract distinct years
-    st.markdown(
-    """
-    <h1 style='text-align: center;'>Credit Card Analysis Dashboard</h1>
-    """,
-    unsafe_allow_html=True
-    )
-    df_reshaped['Transaction_date'] = pd.to_datetime(df_reshaped['Transaction_date'])
-    distinct_years = df_reshaped['Transaction_date'].dt.year.unique()
+# Assuming df_reshaped is already loaded and processed somewhere above
+df_reshaped['Transaction_date'] = pd.to_datetime(df_reshaped['Transaction_date'])
+
+# Cache the sidebar operations, including filtering
+@st.cache_data
+def get_sidebar_data(df):
+    # Extract distinct years and sort them
+    distinct_years = df['Transaction_date'].dt.year.unique()
     distinct_years = sorted(distinct_years)  # Sort the years
 
     # Add "All Years" option
     years_options = ['All Years'] + list(distinct_years)
 
-    # Step 2: Add the district filter
-    district_list = ['All Districts'] + list(df_reshaped['district_name'].unique())
+    # Extract unique districts
+    district_list = ['All Districts'] + list(df['district_name'].unique())
+    
+    # Return cached data
+    return years_options, district_list
+
+# Cache the filtering logic
+@st.cache_data
+def filter_data(df, selected_district, selected_year):
+    df_filtered = df.copy()
+    
+    # Filter based on selected district
+    if selected_district != 'All Districts':
+        df_filtered = df_filtered[df_filtered['district_name'] == selected_district]
+
+    # Filter based on selected year
+    if selected_year != 'All Years':
+        df_filtered = df_filtered[df_filtered['Transaction_date'].dt.year == int(selected_year)]
+    
+    return df_filtered
+
+# Sidebar setup
+with st.sidebar:
+    st.markdown(
+        """
+        <h1 style='text-align: center;'>Credit Card Analysis Dashboard</h1>
+        """, unsafe_allow_html=True
+    )
+
+    # Retrieve cached sidebar data
+    years_options, district_list = get_sidebar_data(df_reshaped)
+    
+    # District filter
     selected_district = st.selectbox('Select a district', district_list)
-
-    # Step 3: Add the year filter
+    
+    # Year filter
     selected_year = st.selectbox('Select a year', years_options)
-
-    # Step 4: Add color theme options
+    
+    # Color theme options
     color_theme_list = ['plasma', 'cividis', 'greens', 'inferno', 'magma', 'blues', 'reds', 'rainbow', 'turbo', 'viridis']
     selected_color_theme = st.selectbox('Select a color theme', color_theme_list)
 
-df_filtered = df_reshaped.copy()
+# Retrieve filtered data based on selections
+df_filtered = filter_data(df_reshaped, selected_district, selected_year)
 
-# Filter the DataFrame based on the selected district
-if selected_district != 'All Districts':
-    df_filtered = df_filtered[df_filtered['district_name'] == selected_district]
-
-# Apply year filter
-if selected_year != 'All Years':
-    df_filtered = df_filtered[df_filtered['Transaction_date'].dt.year == int(selected_year)]
-
+# Prepare district counts for visualization
 if selected_year != 'All Years':
     df_year_filtered = df_reshaped[df_reshaped['Transaction_date'].dt.year == int(selected_year)]
 else:
     df_year_filtered = df_reshaped
+
 df_district_counts = df_year_filtered['district_name'].value_counts().reset_index()
 df_district_counts.columns = ['district_name', 'count']
 
