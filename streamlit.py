@@ -25,14 +25,11 @@ st.markdown(
 alt.themes.enable("dark")
 
 # Correct CSV export URL using the File ID
-direct_download_link = "https://drive.google.com/uc?export=download&id=1rn8INXFv0Kx3ZwsQHUgsPKe1vI47ik1n"
 
-# Load the data into a pandas DataFrame
-response = requests.get(direct_download_link)
-z = zipfile.ZipFile(BytesIO(response.content))
-file_name = z.namelist()[0]  
-excel_file = z.open(file_name)
-chunk_size = 1000000  # Adjust this based on your needs
+# z = zipfile.ZipFile(BytesIO(response.content))
+# file_name = z.namelist()[0]  
+excel_file = z.open("data.zip")
+chunk_size = 50  # Adjust this based on your needs
 df_list = []
 for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
     df_list.append(chunk)
