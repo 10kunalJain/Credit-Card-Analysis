@@ -74,7 +74,7 @@ def get_sidebar_data(df):
     years_options = list(distinct_years) + ['All Years']
 
     # Extract unique districts
-    district_list = list(df['district_name'].unique()) + ['All Districts']
+    district_list = list(df['district_name'].unique())
     
     # Return cached data
     return years_options, district_list
@@ -85,14 +85,14 @@ def filter_data(df, selected_district, selected_year):
     df_filtered = df.copy()
     
     # Filter based on selected district
-    if selected_district != 'All Districts':
-        df_filtered = df_filtered[df_filtered['district_name'] == selected_district]
+    df_filtered = df_filtered[df_filtered['district_name'] == selected_district]
 
     # Filter based on selected year
     if selected_year != 'All Years':
         df_filtered = df_filtered[df_filtered['Transaction_date'].dt.year == int(selected_year)]
     
     return df_filtered
+
 
 # Sidebar setup
 with st.sidebar:
