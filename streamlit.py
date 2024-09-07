@@ -29,7 +29,7 @@ alt.themes.enable("dark")
 local_zip_file = "data.zip"
 
 # Open the ZIP file from the local path
-chunk_size = 50000  # Adjust this value based on available memory
+chunk_size = 5000  # Adjust this value based on available memory
 @st.cache_data
 def load_large_csv_from_zip(zip_file_path, chunk_size):
     # Initialize an empty list to store chunks
