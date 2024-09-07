@@ -84,21 +84,21 @@ df_district_counts = df_year_filtered['district_name'].value_counts().reset_inde
 df_district_counts.columns = ['district_name', 'count']
 
 # Function to create the column chart
-# def make_column_chart(input_df, input_y, input_x, input_color, input_color_theme):
-#     column_chart = alt.Chart(input_df).mark_bar().encode(
-#         x=alt.X(f'{input_y}:O', axis=alt.Axis(title="District", titleFontSize=18, titlePadding=15, titleFontWeight=900)),
-#         y=alt.Y(f'{input_x}:Q', axis=alt.Axis(title="Customer count", titleFontSize=18, titlePadding=15, titleFontWeight=900)),
-#         color=alt.Color(f'{input_color}:Q',
-#                         legend=None,
-#                         scale=alt.Scale(scheme=input_color_theme)),
-#     ).properties(width=900).configure_axis(
-#         labelFontSize=12,
-#         titleFontSize=12
-#     ) 
-#     return column_chart
+def make_column_chart(input_df, input_y, input_x, input_color, input_color_theme):
+    column_chart = alt.Chart(input_df).mark_bar().encode(
+        x=alt.X(f'{input_y}:O', axis=alt.Axis(title="District", titleFontSize=18, titlePadding=15, titleFontWeight=900)),
+        y=alt.Y(f'{input_x}:Q', axis=alt.Axis(title="Customer count", titleFontSize=18, titlePadding=15, titleFontWeight=900)),
+        color=alt.Color(f'{input_color}:Q',
+                        legend=None,
+                        scale=alt.Scale(scheme=input_color_theme)),
+    ).properties(width=900).configure_axis(
+        labelFontSize=12,
+        titleFontSize=12
+    ) 
+    return column_chart
 
 
-# column_chart = make_column_chart(df_district_counts, input_y='district_name', input_x='count', input_color='count', input_color_theme=selected_color_theme)
+column_chart = make_column_chart(df_district_counts, input_y='district_name', input_x='count', input_color='count', input_color_theme=selected_color_theme)
 # st.altair_chart(column_chart)
 
 
@@ -341,9 +341,9 @@ age_chart = plot_age_distribution(df_aggregated, selected_color_theme)
 # st.altair_chart(age_chart)
 
 # Dashboard Main Panel
-# with st.container():
-#     # Big Column Chart
-#     st.altair_chart(column_chart, use_container_width=True)
+with st.container():
+    # Big Column Chart
+    st.altair_chart(column_chart, use_container_width=True)
 
 with st.container():
     col1, col2, col3 = st.columns(3)
