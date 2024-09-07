@@ -39,7 +39,7 @@ with zipfile.ZipFile(local_zip_file, 'r') as z:
     file_name = z.namelist()[0]  # Get the first file name in the ZIP archive
     with z.open(file_name) as excel_file:
         # Read the CSV file in chunks
-        for chunk in pd.read_csv(excel_file, chunksize=chunk_size):
+        for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
             # Perform any processing on each chunk here (optional)
             chunks.append(chunk)
 
