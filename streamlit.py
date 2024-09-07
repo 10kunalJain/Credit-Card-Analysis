@@ -71,10 +71,10 @@ def get_sidebar_data(df):
     distinct_years = sorted(distinct_years)  # Sort the years
 
     # Add "All Years" option
-    years_options = ['All Years'] + list(distinct_years)
+    years_options = list(distinct_years) + ['All Years']
 
     # Extract unique districts
-    district_list = ['All Districts'] + list(df['district_name'].unique())
+    district_list = list(df['district_name'].unique()) + ['All Districts']
     
     # Return cached data
     return years_options, district_list
