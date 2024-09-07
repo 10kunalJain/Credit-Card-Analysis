@@ -29,14 +29,22 @@ alt.themes.enable("dark")
 local_zip_file = "data.zip"
 
 # Open the ZIP file from the local path
+chunk_size = 50000  # Adjust this value based on available memory
+
+# Initialize an empty list to store chunks
+chunks = []
+
+# Open the ZIP file from the local path
 with zipfile.ZipFile(local_zip_file, 'r') as z:
     file_name = z.namelist()[0]  # Get the first file name in the ZIP archive
-    excel_file = z.open(file_name)  # Open the file within the ZIP archive
-    chunk_size = 50
-    df_list = []
-    for chunk in pd.read_csv(excel_file, chunksize=chunk_size, low_memory=False):
-        df_list.append(chunk)
-    df_reshaped = pd.concat(df_list, ignore_index=True)  # Read the CSV file into a DataFrame
+    with z.open(file_name) as excel_file:
+        # Read the CSV file in chunks
+        for chunk in pd.read_csv(excel_file, chunksize=chunk_size):
+            # Perform any processing on each chunk here (optional)
+            chunks.append(chunk)
+
+# Concatenate all chunks into a single DataFrame
+df_reshaped = pd.concat(chunks, ignore_index=True)
 # excel_file = z.open("data.zip")
 # chunk_size = 50  # Adjust this based on your needs
 
