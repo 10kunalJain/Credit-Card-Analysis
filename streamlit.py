@@ -35,6 +35,7 @@ chunk_size = 50000  # Adjust this value based on available memory
 chunks = []
 
 # Open the ZIP file from the local path
+@st.cache_data
 with zipfile.ZipFile(local_zip_file, 'r') as z:
     file_name = z.namelist()[0]  # Get the first file name in the ZIP archive
     with z.open(file_name) as excel_file:
